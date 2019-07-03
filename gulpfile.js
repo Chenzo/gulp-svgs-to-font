@@ -1,11 +1,11 @@
 
 
 var gulp = require("gulp"),
-    iconfont = require('gulp-iconfont');
-
+    iconfont = require('gulp-iconfont'),
+    runTimestamp = Math.round(Date.now()/1000);
 
 //This is broken: https://github.com/nfroidure/gulp-iconfont/issues/79 - trying to fix
-function iconfont() {
+function iconfontnew() {
     return gulp
         .src(['.svgs/*.svg'])
         .pipe(iconfont({
@@ -18,8 +18,21 @@ function iconfont() {
         .pipe(gulp.dest('./fonts/'));
 }
 
+gulp.task('Iconfont', function(){
+    return gulp.src(['./svgs/*.svg'])
+      .pipe(iconfont({
+        fontName: 'myfont', // required
+        prependUnicode: true, // recommended option
+        formats: ['ttf', 'eot', 'woff'], // default, 'woff2' and 'svg' are available
+        timestamp: runTimestamp, // recommended to get consistent builds when watching files
+      }))
+        .on('glyphs', function(glyphs, options) {
+          // CSS templating, e.g.
+          console.log(glyphs, options);
+        })
+      .pipe(gulp.dest('./fonts/'));
+  });
 
+exports.iconfontnew = iconfont
 
-exports.iconfont = iconfont
-
-gulp.task('iconFont', iconfont);
+gulp.task('iconFontNew', iconfontnew);
